@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Continuous_Integration1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/jetty-all-7.0.2.v20100331.jar!/" />
+      <root url="jar://$PROJECT_DIR$/servlet-api-2.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
