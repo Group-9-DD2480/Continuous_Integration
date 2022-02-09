@@ -77,7 +77,11 @@ public class ContinuousIntegrationServer extends AbstractHandler
     }
 
     public static void cloneRepository(String url) throws IOException, GitAPIException  {
-        File myObj = new File("C:\\Users\\thean\\Documents\\KTH\\dd2480\\temp");
+        String currentDirectory = System.getProperty("user.dir");
+        File myObj = new File(currentDirectory + "\\temp");
+        if (!myObj.exists()){
+            myObj.mkdirs();
+        }
         //Git.cloneRepository().setURI(url).setDirectory(Paths.get("/path/to/temp").toFile()).call();
         Git.cloneRepository().setURI(url).setDirectory(myObj).call();
 
