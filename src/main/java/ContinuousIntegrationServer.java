@@ -47,16 +47,23 @@ public class ContinuousIntegrationServer extends AbstractHandler
             //JSONObject json = new JSONObject(requestData); 
             String test = json.getString("ref");
             JSONObject repo = json.getJSONObject("repository");
+            
             response.getWriter().println(repo);
-            try {
-                cloneRepository(json.getJSONObject("repository").getString("clone_url"));
-            } catch (JSONException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (GitAPIException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } 
+            // try {
+            //     cloneRepository(json.getJSONObject("repository").getString("clone_url"));
+            // } catch (JSONException e) {
+            //     // TODO Auto-generated catch block
+            //     e.printStackTrace();
+            // } catch (GitAPIException e) {
+            //     // TODO Auto-generated catch block
+            //     e.printStackTrace();
+            // } 
+
+
+            JSONObject head = json.getJSONObject("head_commit");
+            String statuses_url = repo.getString("statuses_url");
+            String sha = head.getString("id");
+            setGitStatus(true, statuses_url, sha);
         }
 
         // here you do all the continuous integration tasks
@@ -85,5 +92,28 @@ public class ContinuousIntegrationServer extends AbstractHandler
         //Git.cloneRepository().setURI(url).setDirectory(Paths.get("/path/to/temp").toFile()).call();
         Git.cloneRepository().setURI(url).setDirectory(myObj).call();
 
+    }
+
+    public void sendMail(String email, String buildResult) throws IOException{
+        ProcessBuilder pb = new ProcessBuilder();
+        pb.command("bash", "-c", "mail -s \"Your push\" " + email +"  <<< '" + buildResult + "'");
+        pb.start();
+    }
+
+    public static void setGitStatus(Boolean result, String statuses_url, String sha) throws IOException {
+        // We set either error, pending, failure, success in a post req.
+        String status;
+        String https = "https:\\";
+        statuses_url.substring(0, statuses_url.length() - 5);
+        statuses_url = https + statuses_url + sha;
+
+        if(result) status = "success";
+        else status = "failure";
+        
+        String command = String.format("curl -X POST -H 'Content-Type: application/json' --data 'state:&s' &s &s", status, https, statuses_url);
+                                      //curl -X POST -H 'Content-Type: application/json' --data '{"state": "success", ...}' https://<token>:x-oauth-basic@api.github.com/repos/politrons/proyectV/statuses/6dcb09b5b57875f334f61aebed695e2e4193db5e
+
+        Process process = Runtime.getRuntime().exec(command);
+        process.destroy();
     }
 }
