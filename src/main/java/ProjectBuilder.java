@@ -23,7 +23,7 @@ public class ProjectBuilder {
     public boolean compileMaven(String goal) throws MavenInvocationException {
         InvocationRequest request = createInvocationRequest(goal);
         Invoker invoker = new DefaultInvoker();
-        invoker.setMavenHome(new File("/usr/share/maven"));
+        invoker.setMavenHome(new File(System.getenv("MAVEN_HOME")));
         InvocationResult result = invoker.execute(request);
 
         if ( result.getExitCode() != 0 ) {
