@@ -1,4 +1,10 @@
+import java.util.*;
 import java.util.stream.Collectors;
+
+import javax.mail.*;
+import javax.mail.internet.*;
+import javax.activation.*;
+
 import java.util.Arrays; //Might be able to be removed
 import java.util.List; // might be able to be removed
 
@@ -41,6 +47,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
         if(request.getMethod()=="POST") {
             String requestData = request.getReader().lines().collect(Collectors.joining());
+            
             //response.getWriter().println(requestData);
             JSONObject json = new JSONObject(requestData); 
             //System.out.println(json.getString("ref"));
@@ -61,9 +68,12 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
 
             JSONObject head = json.getJSONObject("head_commit");
-            String statuses_url = repo.getString("statuses_url");
-            String sha = head.getString("id");
-            setGitStatus(true, statuses_url, sha);
+            // String statuses_url = repo.getString("statuses_url");
+            JSONArray commits = json.getJSONArray("commits");
+            JSONObject info = commits.getJSONObject(0);
+            String mail = info.getJSONObject("author").getString("email");
+            sendMail(mail, "test mail");
+            //setGitStatus(true, statuses_url, sha);
         }
 
         // here you do all the continuous integration tasks
@@ -77,6 +87,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception
     {
+        
         Server server = new Server(8080);
         server.setHandler(new ContinuousIntegrationServer()); 
         server.start();
@@ -94,26 +105,39 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
     }
 
-    public void sendMail(String email, String buildResult) throws IOException{
-        ProcessBuilder pb = new ProcessBuilder();
-        pb.command("bash", "-c", "mail -s \"Your push\" " + email +"  <<< '" + buildResult + "'");
-        pb.start();
+    public static void sendMail(String to, String build) throws IOException{
+        String from = "dd2480group9@gmail.com";
+        //String host = "localhost:80";
+        String host = "imap.gmail.com";
+        Properties properties = System.getProperties();
+        properties.setProperty("mail.smtp.host", host);
+        properties.setProperty("mail.smtp.port", "465");
+        properties.setProperty("mail.smtp.ssl.enable", "true");
+        properties.setProperty("mail.smtp.auth", "true");
+        // properties.setProperty("mail.user", "dd2480group9");
+        // properties.setProperty("mail.password", "testtestdd2480");
+        Session session = Session.getInstance(properties, new javax.mail.Authenticator(){
+            protected PasswordAuthentication getPasswordAuthentication() {
+
+                return new PasswordAuthentication(from, "testtestdd2480");
+
+            }
+        });
+        try {
+         // Create a default MimeMessage object.
+         MimeMessage message = new MimeMessage(session);
+
+         // Set From: header field of the header.
+         message.setFrom(new InternetAddress(from));
+
+         // Set To: header field of the header.
+         message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+         message.setSubject("Latest push");
+         message.setText(build);
+         Transport.send(message);
+      } catch (MessagingException mex) {
+         mex.printStackTrace();
+      }
     }
-
-    public static void setGitStatus(Boolean result, String statuses_url, String sha) throws IOException {
-        // We set either error, pending, failure, success in a post req.
-        String status;
-        String https = "https:\\";
-        statuses_url.substring(0, statuses_url.length() - 5);
-        statuses_url = https + statuses_url + sha;
-
-        if(result) status = "success";
-        else status = "failure";
-        
-        String command = String.format("curl -X POST -H 'Content-Type: application/json' --data 'state:&s' &s &s", status, https, statuses_url);
-                                      //curl -X POST -H 'Content-Type: application/json' --data '{"state": "success", ...}' https://<token>:x-oauth-basic@api.github.com/repos/politrons/proyectV/statuses/6dcb09b5b57875f334f61aebed695e2e4193db5e
-
-        Process process = Runtime.getRuntime().exec(command);
-        process.destroy();
-    }
+    
 }
