@@ -57,6 +57,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             } 
+
         }
 
         // here you do all the continuous integration tasks
