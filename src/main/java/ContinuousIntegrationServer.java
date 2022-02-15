@@ -102,42 +102,38 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
     }
 
-    public static void sendMail(String to, String build) throws IOException, IllegalArgumentException{
+    // Sends email notification to the author
+    public boolean sendMail(String to, String build) throws IOException, IllegalArgumentException{
+        //checks that it is a valid email address
         if (!(to.contains("@"))){
             throw new IllegalArgumentException("not email address");
         }
         
         String from = "dd2480group9@gmail.com";
-        //String host = "localhost:80";
         String host = "imap.gmail.com";
         Properties properties = System.getProperties();
         properties.setProperty("mail.smtp.host", host);
         properties.setProperty("mail.smtp.port", "465");
         properties.setProperty("mail.smtp.ssl.enable", "true");
         properties.setProperty("mail.smtp.auth", "true");
-        // properties.setProperty("mail.user", "dd2480group9");
-        // properties.setProperty("mail.password", "testtestdd2480");
         Session session = Session.getInstance(properties, new javax.mail.Authenticator(){
             protected PasswordAuthentication getPasswordAuthentication() {
-
                 return new PasswordAuthentication(from, "testtestdd2480");
-
             }
         });
         try {
          // Create a default MimeMessage object.
          MimeMessage message = new MimeMessage(session);
-
-         // Set From: header field of the header.
          message.setFrom(new InternetAddress(from));
 
-         // Set To: header field of the header.
          message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
          message.setSubject("Latest push");
          message.setText(build);
          Transport.send(message);
+         return true;
         } catch (MessagingException mex) {
          mex.printStackTrace();
+         return false;
       }
     }
     

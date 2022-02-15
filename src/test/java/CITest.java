@@ -35,4 +35,13 @@ class CITest {
                 continuousIntegration.sendMail("wrongmail", "wrong test");
             }); 
     }
+
+    //Checks that mail is sent
+    // Expected output true
+    @Test
+    void SendEmailTest() throws Exception {
+        ContinuousIntegrationServer continuousIntegration = new ContinuousIntegrationServer();
+        boolean temp = continuousIntegration.sendMail("thea.noteberg@gmail.com", "test");
+        assertTrue(temp);
+    }
 }
