@@ -23,7 +23,7 @@ public class ProjectBuilder {
     public boolean compileMaven(String goal) throws MavenInvocationException {
         InvocationRequest request = createInvocationRequest(goal);
         Invoker invoker = new DefaultInvoker();
-        invoker.setMavenHome(new File(System.getenv("MAVEN_HOME")));
+        //invoker.setMavenHome(new File(System.getenv("MAVEN_HOME")));
         InvocationResult result = invoker.execute(request);
 
         if ( result.getExitCode() != 0 ) {
@@ -34,7 +34,8 @@ public class ProjectBuilder {
     }
     /*
     public static void main(String[] args) {
-        ProjectBuilder projectBuilder = new ProjectBuilder(null, null, this.pomPath);
+        ProjectBuilder projectBuilder = new ProjectBuilder("testest");
+        System.out.println("Test");
         try {
             projectBuilder.compileMaven("compile");
         } catch (MavenInvocationException e) {
