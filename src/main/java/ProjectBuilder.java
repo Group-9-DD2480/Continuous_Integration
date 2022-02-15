@@ -20,7 +20,7 @@ public class ProjectBuilder {
         return request;
     }
 
-    public boolean compileMaven(String goal) throws MavenInvocationException {
+    public int compileMaven(String goal) throws MavenInvocationException {
         InvocationRequest request = createInvocationRequest(goal);
         Invoker invoker = new DefaultInvoker();
         //invoker.setMavenHome(new File(System.getenv("MAVEN_HOME")));
@@ -30,17 +30,7 @@ public class ProjectBuilder {
             throw new IllegalStateException( "Build failed.");
             // We can also return result.getExecutionException() for more info on where it failed
         }
-        return true;
+        result.getExecutionException();
+        return result.getExitCode();
     }
-    /*
-    public static void main(String[] args) {
-        ProjectBuilder projectBuilder = new ProjectBuilder("testest");
-        System.out.println("Test");
-        try {
-            projectBuilder.compileMaven("compile");
-        } catch (MavenInvocationException e) {
-            e.printStackTrace();
-        }
-    }
-    */
 }

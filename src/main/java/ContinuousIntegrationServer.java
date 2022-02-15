@@ -40,32 +40,25 @@ public class ContinuousIntegrationServer extends AbstractHandler
         baseRequest.setHandled(true);
 
         System.out.println(target);
-        String parameter = request.getMethod();
-
         if(request.getMethod()=="POST") {
             String requestData = request.getReader().lines().collect(Collectors.joining());
             
-            //response.getWriter().println(requestData);
             JSONObject json = new JSONObject(requestData); 
-            //System.out.println(json.getString("ref"));
-            //JSONObject json = new JSONObject(requestData); 
-            String test = json.getString("ref");
             JSONObject repo = json.getJSONObject("repository");
             
             response.getWriter().println(repo);
             
-            JSONObject head = json.getJSONObject("head_commit");
-            // String statuses_url = repo.getString("statuses_url");
+            //Extracts the email from payload
             JSONArray commits = json.getJSONArray("commits");
             JSONObject info = commits.getJSONObject(0);
             String mail = info.getJSONObject("author").getString("email");
-            
-            //setGitStatus(true, statuses_url, sha);
+
+            int result = -1;
             try {
                 //Clones the repository
                 cloneRepository(json.getJSONObject("repository").getString("clone_url"));
                 //Compiles the repository
-                compileRepository();
+                result = compileRepository();
             } catch (JSONException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -75,14 +68,13 @@ public class ContinuousIntegrationServer extends AbstractHandler
             } catch (MavenInvocationException e) {
                 e.printStackTrace();
             }
-            sendMail(mail, "test mail");
 
+            if (result != 0) {
+                sendMail(mail, "failure");
+            }else{
+                sendMail(mail, "sucess");
+            }
         }
-
-        // here you do all the continuous integration tasks
-        // for example
-        // 1st clone your repository
-        // 2nd compile the code
 
         response.getWriter().println("requestData");
     }
@@ -103,7 +95,6 @@ public class ContinuousIntegrationServer extends AbstractHandler
         if (!myObj.exists()){
             myObj.mkdirs();
         }
-        //Git.cloneRepository().setURI(url).setDirectory(Paths.get("/path/to/temp").toFile()).call();
         Git.cloneRepository().setURI(url).setDirectory(myObj).call();
 
     }
@@ -144,10 +135,10 @@ public class ContinuousIntegrationServer extends AbstractHandler
     }
     
 
-    public static void compileRepository() throws MavenInvocationException {
+    public static int compileRepository() throws MavenInvocationException {
         String testDirectory = System.getProperty("user.dir");
         ProjectBuilder projectBuilder = new ProjectBuilder(testDirectory + "/temp/pom.xml");
-        projectBuilder.compileMaven("test");
+        return projectBuilder.compileMaven("test");   
     }
 
 }
