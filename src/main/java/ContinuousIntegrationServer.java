@@ -19,6 +19,8 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.util.Paths;
 
 import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 /** 
  Skeleton of a src.main.java.ContinuousIntegrationServer which acts as webhook
@@ -102,6 +104,20 @@ public class ContinuousIntegrationServer extends AbstractHandler
         openLogFile.write(current_build.toString());
         openLogFile.close();       
         
+    }
+
+    public static void printLogFile(HttpServletResponse response){
+        try {
+            FileReader log = new FileReader("logFile.txt");
+            BufferedReader reader = new BufferedReader(log);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.getWriter().println(line);
+            }
+            reader.close();
+          } catch(Exception e) {
+            e.getStackTrace();
+          }
     }
 
     public static void cloneRepository(String url) throws IOException, GitAPIException  {
