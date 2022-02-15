@@ -17,8 +17,17 @@ class CITest {
     
     // If CompileTest.class exists, deletes it and compiles the test folder, 
     // then checks that the new class-file exists. Expects output true.
+    // If
     @Test
     void P1CompilerTest() throws MavenInvocationException {
+        ProjectBuilder projectBuilder = new ProjectBuilder("pom.xml");
+        File testFile = new File("target/classes/ContinuousIntegrationServer.class");
+        if (testFile.exists()) testFile.delete();
+        projectBuilder.compileMaven("compile");
+        assertTrue(testFile.exists());
+    }
+    @Test
+    void P2CompilerTest() throws MavenInvocationException {
         ProjectBuilder projectBuilder = new ProjectBuilder("pom.xml");
         File testFile = new File("target/test-classes/CompileTest.class");
         if (testFile.exists()) testFile.delete();

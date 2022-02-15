@@ -75,7 +75,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
             } catch (MavenInvocationException e) {
                 e.printStackTrace();
             }
-            sendMail(mail, "test mail"); 
+            sendMail(mail, "test mail");
 
         }
 
@@ -147,7 +147,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
     public static void compileRepository() throws MavenInvocationException {
         String testDirectory = System.getProperty("user.dir");
         ProjectBuilder projectBuilder = new ProjectBuilder(testDirectory + "/temp/pom.xml");
-        projectBuilder.compileMaven("compile");
+        projectBuilder.compileMaven("test");
     }
 
 }
