@@ -18,6 +18,8 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.util.Paths;
 
+import java.io.FileWriter;
+
 /** 
  Skeleton of a src.main.java.ContinuousIntegrationServer which acts as webhook
  See the Jetty documentation for API documentation of those classes.
@@ -76,13 +78,29 @@ public class ContinuousIntegrationServer extends AbstractHandler
         server.start();
         server.join();
     }
-    
-    public static void logCurrentBuild(String updated_at, String commit_url) throws Exception
+
+    public static void logCurrentBuild(String updated_at, String commit_url, String buildInfo) throws Exception
     {
         JSONObject current_build = new JSONObject();
         current_build.put("Build date", updated_at);
         current_build.put("Link to commit", commit_url);
+        current_build.put("Build results", buildInfo);
+        String currentDirectory = System.getProperty("user.dir");
+        try{
+            File logFile = new File(currentDirectory + "\\logs.txt");
+            if (logFile.createNewFile()) {
+                System.out.println("First entry in log");
+              } else {
+                System.out.println("Adding new entry to log");
+              }
+        } catch(IOException e){
+            System.out.println("Not able to create or find file");
+            e.printStackTrace();
+        }
         
+        FileWriter openLogFile = new FileWriter("logs.txt");
+        openLogFile.write(current_build.toString());
+        openLogFile.close();       
         
     }
 
