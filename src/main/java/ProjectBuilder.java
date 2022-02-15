@@ -34,7 +34,8 @@ public class ProjectBuilder {
     }
     /*
     public static void main(String[] args) {
-        ProjectBuilder projectBuilder = new ProjectBuilder(null, null, this.pomPath);
+        ProjectBuilder projectBuilder = new ProjectBuilder("testest");
+        System.out.println("Test");
         try {
             projectBuilder.compileMaven("compile");
         } catch (MavenInvocationException e) {
