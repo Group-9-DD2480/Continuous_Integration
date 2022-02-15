@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 
 import java.io.File;
 import java.io.IOException;
+import org.apache.maven.shared.invoker.MavenInvocationException;
  
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
@@ -49,14 +50,20 @@ public class ContinuousIntegrationServer extends AbstractHandler
             JSONObject repo = json.getJSONObject("repository");
             response.getWriter().println(repo);
             try {
+                //Clones the repository
                 cloneRepository(json.getJSONObject("repository").getString("clone_url"));
+                //Compiles the repository
+                compileRepository();
             } catch (JSONException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (GitAPIException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-            } 
+            } catch (MavenInvocationException e) {
+                e.printStackTrace();
+            }
+
 
         }
 
@@ -79,12 +86,17 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
     public static void cloneRepository(String url) throws IOException, GitAPIException  {
         String currentDirectory = System.getProperty("user.dir");
-        File myObj = new File(currentDirectory + "\\temp");
+        File myObj = new File(currentDirectory + "/temp");
         if (!myObj.exists()){
             myObj.mkdirs();
         }
         //Git.cloneRepository().setURI(url).setDirectory(Paths.get("/path/to/temp").toFile()).call();
         Git.cloneRepository().setURI(url).setDirectory(myObj).call();
 
+    }
+    public static void compileRepository() throws MavenInvocationException {
+        String testDirectory = System.getProperty("user.dir");
+        ProjectBuilder projectBuilder = new ProjectBuilder(testDirectory + "/temp/pom.xml");
+        projectBuilder.compileMaven("compile");
     }
 }
