@@ -76,6 +76,15 @@ public class ContinuousIntegrationServer extends AbstractHandler
         server.start();
         server.join();
     }
+    
+    public static void logCurrentBuild(String updated_at, String commit_url) throws Exception
+    {
+        JSONObject current_build = new JSONObject();
+        current_build.put("Build date", updated_at);
+        current_build.put("Link to commit", commit_url);
+        
+        
+    }
 
     public static void cloneRepository(String url) throws IOException, GitAPIException  {
         String currentDirectory = System.getProperty("user.dir");
