@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
  
 import org.eclipse.jetty.server.Server;
+import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jgit.api.Git;
@@ -68,7 +69,6 @@ public class ContinuousIntegrationServer extends AbstractHandler
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
             sendMail(mail, "test mail"); 
 
         }
