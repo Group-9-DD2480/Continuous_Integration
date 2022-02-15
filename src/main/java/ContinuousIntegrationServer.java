@@ -56,24 +56,26 @@ public class ContinuousIntegrationServer extends AbstractHandler
             JSONObject repo = json.getJSONObject("repository");
             
             response.getWriter().println(repo);
-            // try {
-            //     cloneRepository(json.getJSONObject("repository").getString("clone_url"));
-            // } catch (JSONException e) {
-            //     // TODO Auto-generated catch block
-            //     e.printStackTrace();
-            // } catch (GitAPIException e) {
-            //     // TODO Auto-generated catch block
-            //     e.printStackTrace();
-            // } 
-
-
+            
             JSONObject head = json.getJSONObject("head_commit");
             // String statuses_url = repo.getString("statuses_url");
             JSONArray commits = json.getJSONArray("commits");
             JSONObject info = commits.getJSONObject(0);
             String mail = info.getJSONObject("author").getString("email");
-            sendMail(mail, "test mail");
+            
             //setGitStatus(true, statuses_url, sha);
+            try {
+                cloneRepository(json.getJSONObject("repository").getString("clone_url"));
+            } catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (GitAPIException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            
+            sendMail(mail, "test mail"); 
+
         }
 
         // here you do all the continuous integration tasks
