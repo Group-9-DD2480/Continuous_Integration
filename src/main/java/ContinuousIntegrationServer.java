@@ -66,6 +66,12 @@ public class ContinuousIntegrationServer extends AbstractHandler
                 cloneRepository(json.getJSONObject("repository").getString("clone_url"));
                 //Compiles the repository
                 compileRepository();
+            } catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (GitAPIException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             } catch (MavenInvocationException e) {
                 e.printStackTrace();
             }
