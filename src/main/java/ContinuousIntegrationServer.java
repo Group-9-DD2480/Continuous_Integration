@@ -32,12 +32,7 @@ import org.eclipse.jgit.util.Paths;
 
 public class ContinuousIntegrationServer extends AbstractHandler
 {
-    public void handle(String target,
-                       Request baseRequest,
-                       HttpServletRequest request,
-                       HttpServletResponse response) 
-        throws IOException, ServletException
-    {
+    public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)  throws IOException, ServletException {
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
@@ -73,7 +68,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            
+
             sendMail(mail, "test mail"); 
 
         }
@@ -107,7 +102,11 @@ public class ContinuousIntegrationServer extends AbstractHandler
 
     }
 
-    public static void sendMail(String to, String build) throws IOException{
+    public static void sendMail(String to, String build) throws IOException, IllegalArgumentException{
+        if (!(to.contains("@"))){
+            throw new IllegalArgumentException("not email address");
+        }
+        
         String from = "dd2480group9@gmail.com";
         //String host = "localhost:80";
         String host = "imap.gmail.com";
@@ -137,7 +136,7 @@ public class ContinuousIntegrationServer extends AbstractHandler
          message.setSubject("Latest push");
          message.setText(build);
          Transport.send(message);
-      } catch (MessagingException mex) {
+        } catch (MessagingException mex) {
          mex.printStackTrace();
       }
     }
