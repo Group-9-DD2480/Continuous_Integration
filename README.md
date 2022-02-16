@@ -53,5 +53,3 @@ This made us proud of the project we were able to create.
 
 #### Sida Sun
 - Participate in group meeetings
-- Help with the setting up of Maven
-- Review the code
