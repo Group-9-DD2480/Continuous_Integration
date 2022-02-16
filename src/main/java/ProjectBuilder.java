@@ -12,14 +12,25 @@ public class ProjectBuilder {
     public ProjectBuilder(String pomPath) {
         this.pomPath = pomPath;
     }
-    
+    /**
+     * This function creates an invocaton for the goal that will be executed in compileMaven.
+     * 
+     *
+     * @param goal String that sets the goal of the invocation. 
+     * */
     private InvocationRequest createInvocationRequest(String goal){
         InvocationRequest request = new DefaultInvocationRequest();
         request.setPomFile(new File(this.pomPath));
         request.setGoals(Collections.singletonList(goal));
         return request;
     }
-
+    /**
+     * This function compiles the code according to the goal set.
+     * 
+     *
+     * @param goal String that sets the goal of the invocation. 
+     * @return The result of the compilation. If successfull 0 will be returned. 
+     * */
     public int compileMaven(String goal) throws MavenInvocationException {
         InvocationRequest request = createInvocationRequest(goal);
         Invoker invoker = new DefaultInvoker();
