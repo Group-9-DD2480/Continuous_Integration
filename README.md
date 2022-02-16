@@ -10,5 +10,9 @@ P1 is implemented in projectBuilder, using maven invoker. The documentation of i
 
 P2 is implemented the same way as P1. The unit test can also be found at the same test class as P1.
 
+## Implementation of notification (P3)
+
+P3 is implemented in ContinuousIntegrationServer using Java Properties. It can be found in the sendMail function. The unit tests checks if it gets to the end of try function based on what the sendMail function returns.
+
 ## Run the tests
 Go to the pom.xml file in the terminal, use mvn compile and mvn test , to compile and run the tests.
