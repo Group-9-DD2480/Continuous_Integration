@@ -18,10 +18,10 @@ Push the project to trigger the CI Server to compile and build your project.\
 Run ```mvn test``` to run the tests.
 
 ### P+
-## P9
+#### P9
 We linked every pull request to an issue, that was the standard we established last project.
 
-## P8
+#### P8
 Without having any prior knowledge in either using or creating a continuous integration server a lot of hours were spent figuring out just what to do, and more importantly how to do it. This made everyone have to adapt to a new working environment, and even though we were put under quite a lot of stress, and one member not being able to attend due to personal issues, everyone stayed proffessional and cordial, and we believe that we are now more than ever ready to tackle the future assignments. We believe that learning to adapt to new work environments in a proficient manner is worth at least something. So doing this project in this amount of time made us evolve in these areas:
 - Communication between team members
 - Better understanding of maven
