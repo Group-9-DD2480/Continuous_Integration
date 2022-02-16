@@ -27,8 +27,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.util.Paths;
 
 /** 
- Skeleton of a src.main.java.ContinuousIntegrationServer which acts as webhook
- See the Jetty documentation for API documentation of those classes.
+ The continuous intergration server. When a webhook is activated it clones the repository, compiles it and sends the result to the author who pushed the code.
 */
 
 
@@ -80,6 +79,9 @@ public class ContinuousIntegrationServer extends AbstractHandler
     }
  
     // used to start the CI server in command line
+            /**
+     * This function starts and joins a local server on the given port.
+     * */
     public static void main(String[] args) throws Exception
     {
         
@@ -88,7 +90,12 @@ public class ContinuousIntegrationServer extends AbstractHandler
         server.start();
         server.join();
     }
-
+        /**
+     * This function clones down the given github repo to a temporary folder located where JVM was started.
+     * 
+     *
+     * @param url String link to the github repo that is to be cloned.
+     * */
     public static void cloneRepository(String url) throws IOException, GitAPIException  {
         String currentDirectory = System.getProperty("user.dir");
         File myObj = new File(currentDirectory + "/temp");
@@ -98,7 +105,15 @@ public class ContinuousIntegrationServer extends AbstractHandler
         Git.cloneRepository().setURI(url).setDirectory(myObj).call();
 
     }
-
+            /**
+     * This function notifies the author about the build result via email. The email is sent to the one linked with the authors github account.
+     * 
+     * 
+     *
+     * @param to String path to were the pom-file for the maven project exists.
+     * @param build String path to were the pom-file for the maven project exists.
+     * @return Return a boolean. True if the email was successfully sent and false otherwise.
+     * */
     // Sends email notification to the author
     public boolean sendMail(String to, String build) throws IOException, IllegalArgumentException{
         //checks that it is a valid email address
@@ -134,7 +149,11 @@ public class ContinuousIntegrationServer extends AbstractHandler
       }
     }
     
-
+           /**
+     * This function creates an instance of the ProjectBuilder class and compiles the code.
+     * 
+     * @return Returns a boolean result from projectBuilder.Compilemaven which reports the results of the compilation.
+     * */
     public static int compileRepository() throws MavenInvocationException {
         String testDirectory = System.getProperty("user.dir");
         ProjectBuilder projectBuilder = new ProjectBuilder(testDirectory + "/temp/pom.xml");
