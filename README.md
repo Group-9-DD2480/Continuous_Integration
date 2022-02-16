@@ -29,5 +29,9 @@ Run ```mvn test``` to run the tests.
 #### Oscar Ingels
 
 #### Edvard Aldor
+- Set up Maven and Webhooks
+- Created the function that clones git repositorys.
+- Created ProjectBuilder with Jonathan
+- Implemented ProjectBuilder with ContinouousIntegrationServer
 
 #### Sida Sun
