@@ -36,6 +36,9 @@ This made us proud of the project we were able to create.
 - Made unit tests for the Email function
 
 #### Jonathan Hedin
+- Enabled the automatic compilation and testing together with Edvard.
+- Made unit tests for the ProjectBuilder.
+- Various bugfixes related to the automatic compilation.
 
 #### Oscar Ingels
 - Tried to work on P7, but unsuccessfully.
