@@ -27,6 +27,9 @@ Run ```mvn test``` to run the tests.
 #### Jonathan Hedin
 
 #### Oscar Ingels
+- Tried to work on P7, but unsuccessfully.
+- Helped Thea with Email notification
+- Crated javadoc documentation.
 
 #### Edvard Aldor
 - Set up Skeleton template
